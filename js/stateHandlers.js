@@ -96,8 +96,7 @@ const stateHandlers = {
             });
         },
         'AboutIntent': function() {
-            var message = "Five Minutes in Church History, hosted by Dr. Stephen Nichols, is a weekly podcast that provides an informal and informative look at church history.
-            Join us each week as we take a brief break from the present to go exploring the past. Five Minutes in Church History is an outreach of Ligonier."
+            var message = "Five Minutes in Church History, hosted by Dr. Stephen Nichols, is a weekly podcast that provides an informal and informative look at church history. Join us each week as we take a brief break from the present to go exploring the past. Five Minutes in Church History is an outreach of Ligonier.";
 
             VoiceInsights.track('StartAbout', null, message, (error, response) => {
                 this.response.speak(message);
@@ -287,8 +286,7 @@ const stateHandlers = {
             });
         },
         'AboutIntent': function() {
-            var message = "Five Minutes in Church History, hosted by Dr. Stephen Nichols, is a weekly podcast that provides an informal and informative look at church history.
-                Join us each week as we take a brief break from the present to go exploring the past. Five Minutes in Church History is an outreach of Ligonier."
+            var message = "Five Minutes in Church History, hosted by Dr. Stephen Nichols, is a weekly podcast that provides an informal and informative look at church history. Join us each week as we take a brief break from the present to go exploring the past. Five Minutes in Church History is an outreach of Ligonier.";
 
             VoiceInsights.track('PlayAbout', null, message, (error, response) => {
                 this.response.speak(message);
@@ -403,8 +401,7 @@ const stateHandlers = {
             });
         },
         'AboutIntent': function() {
-            var message = "Five Minutes in Church History, hosted by Dr. Stephen Nichols, is a weekly podcast that provides an informal and informative look at church history.
-                Join us each week as we take a brief break from the present to go exploring the past. Five Minutes in Church History is an outreach of Ligonier."
+            var message = "Five Minutes in Church History, hosted by Dr. Stephen Nichols, is a weekly podcast that provides an informal and informative look at church history. Join us each week as we take a brief break from the present to go exploring the past. Five Minutes in Church History is an outreach of Ligonier.";
 
             VoiceInsights.track('ResumeAbout', null, message, (error, response) => {
                 this.response.speak(message);
