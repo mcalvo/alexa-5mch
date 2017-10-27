@@ -5,7 +5,7 @@ const VoiceInsights = require('voice-insights-sdk');
 const request = require('request');
 const constants = require('./constants');
 const utils = require('./utils');
-const request_string = 'http://www.ligonier.org/podcasts/renewing-your-mind/alexa.json';
+const request_string = 'http://www.ligonier.org/podcasts/5-minutes-church-history/alexa.json';
 
 function initializeSession(body) {
     let today = new Date();
@@ -37,7 +37,7 @@ const stateHandlers = {
                         initializeSession.call(this, body);
 
                         var podcast = this.attributes.audioData[this.attributes.playOrder[this.attributes.index]];
-                        let message = 'Welcome to Renewing Your Mind. Today\'s edition is titled ' + podcast.title;
+                        let message = 'Welcome to Five Minutes in Church History. Today\'s episode is titled ' + podcast.title;
 
                         VoiceInsights.track('StartLaunchRefresh', null, message, (error, response) => {
                             this.response.speak(message);
@@ -46,7 +46,7 @@ const stateHandlers = {
                     }.bind(this));
                 } else {
                     var podcast = this.attributes.audioData[this.attributes.playOrder[this.attributes.index]];
-                    let message = 'Welcome to Renewing Your Mind. Today\'s edition is titled ' + podcast.title;
+                    let message = 'Welcome to Five Minutes in Church History. Today\'s episode is titled ' + podcast.title;
                     VoiceInsights.track('StartLaunch', null, message, (error, response) => {
                         this.response.speak(message);
                         controller.play.call(this);
@@ -57,7 +57,7 @@ const stateHandlers = {
                     initializeSession.call(this, body);
 
                     var podcast = this.attributes.audioData[this.attributes.playOrder[this.attributes.index]];
-                    let message = 'Welcome to Renewing Your Mind. Today\'s edition is titled ' + podcast.title;
+                    let message = 'Welcome to Five Minutes in Church History. Today\'s episode is titled ' + podcast.title;
 
                     VoiceInsights.track('StartLaunchRefresh', null, message, (error, response) => {
                         this.response.speak(message);
@@ -83,11 +83,11 @@ const stateHandlers = {
         'AMAZON.HelpIntent' : function () {
             var podcast = this.attributes.audioData[this.attributes.playOrder[this.attributes.index]];
 
-            var message = 'You\'re listening to Renewing Your Mind for ' + podcast.date + ' titled ' + podcast.title + '. You can say Pause, or, Resume, to control playback. To listen to an earlier edition, say Previous. To return to the most recent edition, say Today\'s Edition. To learn more about Renewing Your Mind, say About. What can I help you with?';
+            var message = 'You\'re listening to Five Minutes in Church History for ' + podcast.date + ' titled ' + podcast.title + '. You can say Pause, or, Resume, to control playback. To listen to an earlier episode, say Previous. To return to the most recent episode, say Today\'s Episode. To learn more about Five Minutes in Church History, say About. What can I help you with?';
             var reprompt = 'What can I help you with?';
 
-            var cardTitle = 'Help with Renewing Your Mind';
-            var cardContent = 'You\'re listening to Renewing Your Mind for ' + podcast.date + ' titled \"' + podcast.title + '\".\nSay "Pause" or "Resume" to control playback.\nSay \"Alexa, ask Renewing Your Mind to play today\'s edition\" to play the most recent edition.\nSay "Previous" to listen to an earlier edition.';
+            var cardTitle = 'Help with Five Minutes in Church History';
+            var cardContent = 'You\'re listening to Five Minutes in Church History for ' + podcast.date + ' titled \"' + podcast.title + '\".\nSay "Pause" or "Resume" to control playback.\nSay \"Alexa, ask Five Minutes in Church History to play today\'s episode\" to play the most recent episode.\nSay "Previous" to listen to an earlier episode.';
             this.response.cardRenderer(cardTitle, cardContent, null);
 
             VoiceInsights.track('StartHelp', null, message, (error, response) => {
@@ -96,7 +96,8 @@ const stateHandlers = {
             });
         },
         'AboutIntent': function() {
-            var message = 'Renewing Your Mind is an outreach of Ligonier Ministries, an international Christian discipleship organization founded in 1971 by Dr. R.C. Sprole. We\'re committed to faithfully presenting the unvarnished truth of Scripture, helping you to know what you believe, why you believe it, how to live it and how to share it.'
+            var message = "Five Minutes in Church History, hosted by Dr. Stephen Nichols, is a weekly podcast that provides an informal and informative look at church history.
+            Join us each week as we take a brief break from the present to go exploring the past. Five Minutes in Church History is an outreach of Ligonier."
 
             VoiceInsights.track('StartAbout', null, message, (error, response) => {
                 this.response.speak(message);
@@ -112,7 +113,7 @@ const stateHandlers = {
                         initializeSession.call(this, body);
 
                         var podcast = this.attributes.audioData[this.attributes.playOrder[this.attributes.index]];
-                        let message = 'Welcome to Renewing Your Mind. Today\'s edition is titled ' + podcast.title;
+                        let message = 'Welcome to Five Minutes in Church History. Today\'s episode is titled ' + podcast.title;
 
                         VoiceInsights.track('StartTodayRefresh', null, message, (error, response) => {
                             this.response.speak(message);
@@ -121,7 +122,7 @@ const stateHandlers = {
                     }.bind(this));
                 } else {
                     var podcast = this.attributes.audioData[this.attributes.playOrder[this.attributes.index]];
-                    let message = 'Welcome to Renewing Your Mind. Today\'s edition is titled ' + podcast.title;
+                    let message = 'Welcome to Five Minutes in Church History. Today\'s episode is titled ' + podcast.title;
                     VoiceInsights.track('StartToday', null, message, (error, response) => {
                         controller.play.call(this);
                     });
@@ -131,7 +132,7 @@ const stateHandlers = {
                     initializeSession.call(this, body);
 
                     var podcast = this.attributes.audioData[this.attributes.playOrder[this.attributes.index]];
-                    let message = 'Welcome to Renewing Your Mind. Today\'s edition is titled ' + podcast.title;
+                    let message = 'Welcome to Five Minutes in Church History. Today\'s episode is titled ' + podcast.title;
 
                     VoiceInsights.track('StartTodayRefresh', null, message, (error, response) => {
                         this.response.speak(message);
@@ -184,7 +185,7 @@ const stateHandlers = {
                             initializeSession.call(this, body);
 
                             var podcast = this.attributes.audioData[this.attributes.playOrder[this.attributes.index]];
-                            let message = 'Welcome to Renewing Your Mind. Today\'s edition is titled ' + podcast.title;
+                            let message = 'Welcome to Five Minutes in Church History. Today\'s episode is titled ' + podcast.title;
 
                             VoiceInsights.track('PlayLaunchRefresh', null, message, (error, response) => {
                                 this.response.speak(message);
@@ -193,7 +194,7 @@ const stateHandlers = {
                         }.bind(this));
                     } else {
                         var podcast = this.attributes.audioData[this.attributes.playOrder[this.attributes.index]];
-                        let message = 'Welcome to Renewing Your Mind. Today\'s edition is titled ' + podcast.title;
+                        let message = 'Welcome to Five Minutes in Church History. Today\'s episode is titled ' + podcast.title;
                         VoiceInsights.track('PlayLaunch', null, message, (error, response) => {
                             controller.play.call(this);
                         });
@@ -203,7 +204,7 @@ const stateHandlers = {
                         initializeSession.call(this, body);
 
                         var podcast = this.attributes.audioData[this.attributes.playOrder[this.attributes.index]];
-                        let message = 'Welcome to Renewing Your Mind. Today\'s edition is titled ' + podcast.title;
+                        let message = 'Welcome to Five Minutes in Church History. Today\'s episode is titled ' + podcast.title;
 
                         VoiceInsights.track('PlayLaunchRefresh', null, message, (error, response) => {
                             this.response.speak(message);
@@ -214,9 +215,9 @@ const stateHandlers = {
             } else {
                 this.handler.state = constants.states.RESUME_MODE;
                 var podcast = this.attributes.audioData[this.attributes.playOrder[this.attributes.index]];
-                message = 'Welcome back to Renewing Your Mind. Previously you were listening to the edition from ' + podcast.date +
-                    ' titled ' + podcast.title + '. Would you like to resume that edition?';
-                reprompt = 'Say yes to resume the edition from ' + podcast.date + ' titled ' + podcast.title + ', or say no to play today\'s edition.';
+                message = 'Welcome back to Five Minutes in Church History. Previously you were listening to the episode from ' + podcast.date +
+                    ' titled ' + podcast.title + '. Would you like to resume that episode?';
+                reprompt = 'Say yes to resume the episode from ' + podcast.date + ' titled ' + podcast.title + ', or say no to play today\'s episode.';
 
                 VoiceInsights.track('PlayLaunchResume', null, message, (error, response) => {
                     this.response.speak(message).listen(reprompt);
@@ -272,11 +273,11 @@ const stateHandlers = {
         'AMAZON.HelpIntent' : function () {
             var podcast = this.attributes.audioData[this.attributes.playOrder[this.attributes.index]];
 
-            var message = 'You\'re listening to Renewing Your Mind for ' + podcast.date + ' titled ' + podcast.title + '. You can say Pause, or, Resume, to control playback. To listen to an earlier edition, say Previous. To return to the most recent edition, say Today\'s Edition. To learn more about Renewing Your Mind, say About. What can I help you with?';
+            var message = 'You\'re listening to Five Minutes in Church History for ' + podcast.date + ' titled ' + podcast.title + '. You can say Pause, or, Resume, to control playback. To listen to an earlier episode, say Previous. To return to the most recent episode, say Today\'s Episode. To learn more about Five Minutes in Church History, say About. What can I help you with?';
             var reprompt = 'What can I help you with?';
 
-            var cardTitle = 'Help with Renewing Your Mind';
-            var cardContent = 'You\'re listening to Renewing Your Mind for ' + podcast.date + ' titled \"' + podcast.title + '\".\nSay "Pause" or "Resume" to control playback.\nSay \"Alexa, ask Renewing Your Mind to play today\'s edition\" to play the most recent edition.\nSay "Previous" to listen to an earlier edition.';
+            var cardTitle = 'Help with Five Minutes in Church History';
+            var cardContent = 'You\'re listening to Five Minutes in Church History for ' + podcast.date + ' titled \"' + podcast.title + '\".\nSay "Pause" or "Resume" to control playback.\nSay \"Alexa, ask Five Minutes in Church History to play today\'s episode\" to play the most recent episode.\nSay "Previous" to listen to an earlier episode.';
             this.response.cardRenderer(cardTitle, cardContent, null);
 
 
@@ -286,7 +287,9 @@ const stateHandlers = {
             });
         },
         'AboutIntent': function() {
-            var message = 'Renewing Your Mind is an outreach of Ligonier Ministries, an international Christian discipleship organization founded in 1971 by Dr. R.C. Sprole. We\'re committed to faithfully presenting the unvarnished truth of Scripture, helping you to know what you believe, why you believe it, how to live it and how to share it.'
+            var message = "Five Minutes in Church History, hosted by Dr. Stephen Nichols, is a weekly podcast that provides an informal and informative look at church history.
+                Join us each week as we take a brief break from the present to go exploring the past. Five Minutes in Church History is an outreach of Ligonier."
+
             VoiceInsights.track('PlayAbout', null, message, (error, response) => {
                 this.response.speak(message);
                 this.emit(':responseReady');
@@ -301,7 +304,7 @@ const stateHandlers = {
                         initializeSession.call(this, body);
 
                         var podcast = this.attributes.audioData[this.attributes.playOrder[this.attributes.index]];
-                        let message = 'Today\'s edition is titled ' + podcast.title;
+                        let message = 'Today\'s episode is titled ' + podcast.title;
 
                         VoiceInsights.track('PlayTodayRefresh', null, message, (error, response) => {
                             this.response.speak(message);
@@ -310,7 +313,7 @@ const stateHandlers = {
                     }.bind(this));
                 } else {
                     var podcast = this.attributes.audioData[this.attributes.playOrder[this.attributes.index]];
-                    let message = 'Today\'s edition is titled ' + podcast.title;
+                    let message = 'Today\'s episode is titled ' + podcast.title;
                     VoiceInsights.track('PlayToday', null, message, (error, response) => {
                         controller.play.call(this);
                     });
@@ -320,7 +323,7 @@ const stateHandlers = {
                     initializeSession.call(this, body);
 
                     var podcast = this.attributes.audioData[this.attributes.playOrder[this.attributes.index]];
-                    let message = 'Today\'s edition is titled ' + podcast.title;
+                    let message = 'Today\'s episode is titled ' + podcast.title;
 
                     VoiceInsights.track('PlayTodayRefresh', null, message, (error, response) => {
                         this.response.speak(message);
@@ -356,9 +359,9 @@ const stateHandlers = {
         'LaunchRequest' : function () {
             var podcast = this.attributes.audioData[this.attributes.playOrder[this.attributes.index]];
 
-            let message = 'Welcome back to Renewing Your Mind. Previously you were listening to the edition from ' + podcast.date +
-                ' titled ' + podcast.title + '. Would you like to resume that edition?';
-            let reprompt = 'Say yes to resume the edition from ' + podcast.date + ' titled ' + podcast.title + ', or say no to play today\'s edition.';
+            let message = 'Welcome back to Five Minutes in Church History. Previously you were listening to the episode from ' + podcast.date +
+                ' titled ' + podcast.title + '. Would you like to resume that episode?';
+            let reprompt = 'Say yes to resume the episode from ' + podcast.date + ' titled ' + podcast.title + ', or say no to play today\'s episode.';
 
             VoiceInsights.track('ResumeLaunch', null, message, (error, response) => {
                 this.response.speak(message).listen(reprompt);
@@ -379,8 +382,8 @@ const stateHandlers = {
         'AMAZON.HelpIntent' : function () {
             var podcast = this.attributes.audioData[this.attributes.playOrder[this.attributes.index]];
 
-            let message = 'Previously you were listening to the edition from ' + podcast.date + ' titled ' + podcast.title + '. Would you like to resume that edition?';
-            let reprompt = 'Say yes to resume the edition from ' + podcast.date + ' titled ' + podcast.title + ', or say no to play today\'s edition.';
+            let message = 'Previously you were listening to the episode from ' + podcast.date + ' titled ' + podcast.title + '. Would you like to resume that episode?';
+            let reprompt = 'Say yes to resume the episode from ' + podcast.date + ' titled ' + podcast.title + ', or say no to play today\'s episode.';
 
             VoiceInsights.track('ResumeHelp', null, message, (error, response) => {
                 this.response.speak(message).listen(reprompt);
@@ -400,7 +403,9 @@ const stateHandlers = {
             });
         },
         'AboutIntent': function() {
-            var message = 'Renewing Your Mind is an outreach of Ligonier Ministries, an international Christian discipleship organization founded in 1971 by Dr. R.C. Sprole. We\'re committed to faithfully presenting the unvarnished truth of Scripture, helping you to know what you believe, why you believe it, how to live it and how to share it.'
+            var message = "Five Minutes in Church History, hosted by Dr. Stephen Nichols, is a weekly podcast that provides an informal and informative look at church history.
+                Join us each week as we take a brief break from the present to go exploring the past. Five Minutes in Church History is an outreach of Ligonier."
+
             VoiceInsights.track('ResumeAbout', null, message, (error, response) => {
                 this.response.speak(message);
                 this.emit(':responseReady');
@@ -415,7 +420,7 @@ const stateHandlers = {
                         initializeSession.call(this, body);
 
                         var podcast = this.attributes.audioData[this.attributes.playOrder[this.attributes.index]];
-                        let message = 'Today\'s edition is titled ' + podcast.title;
+                        let message = 'Today\'s episode is titled ' + podcast.title;
 
                         VoiceInsights.track('ResumeTodayRefresh', null, message, (error, response) => {
                             this.response.speak(message);
@@ -424,7 +429,7 @@ const stateHandlers = {
                     }.bind(this));
                 } else {
                     var podcast = this.attributes.audioData[this.attributes.playOrder[this.attributes.index]];
-                    let message = 'Today\'s edition is titled ' + podcast.title;
+                    let message = 'Today\'s episode is titled ' + podcast.title;
                     VoiceInsights.track('ResumeToday', null, message, (error, response) => {
                         this.response.speak(message);
                         controller.play.call(this);
@@ -435,7 +440,7 @@ const stateHandlers = {
                     initializeSession.call(this, body);
 
                     var podcast = this.attributes.audioData[this.attributes.playOrder[this.attributes.index]];
-                    let message = 'Today\'s edition is titled ' + podcast.title;
+                    let message = 'Today\'s episode is titled ' + podcast.title;
 
                     VoiceInsights.track('ResumeTodayRefresh', null, message, (error, response) => {
                         this.response.speak(message);
@@ -485,8 +490,8 @@ var controller = function () {
                         var cardTitle = podcast.title + ' (' + podcast.date + ')';
                         var cardContent = podcast.description;
                         var cardImage = {
-                            'smallImageUrl': 'https://s3.us-east-2.amazonaws.com/ligonier-audio-app/720x720_RYM_Podcast.jpg',
-                            'largeImageUrl': 'https://s3.us-east-2.amazonaws.com/ligonier-audio-app/1200x1200_RYM_Podcast.jpg'
+                            'smallImageUrl': 'https://s3.us-east-2.amazonaws.com/ligonier-audio-app/700x700_5MiCH.jpg',
+                            'largeImageUrl': 'https://s3.us-east-2.amazonaws.com/ligonier-audio-app/1200x1200_5MiCH.jpg'
                         };
                         this.response.cardRenderer(cardTitle, cardContent, cardImage);
                     }
@@ -505,8 +510,8 @@ var controller = function () {
                 var cardTitle = podcast.title + ' (' + podcast.date + ')';
                 var cardContent = podcast.description;
                 var cardImage = {
-                    'smallImageUrl': 'https://s3.us-east-2.amazonaws.com/ligonier-audio-app/720x720_RYM_Podcast.jpg',
-                    'largeImageUrl': 'https://s3.us-east-2.amazonaws.com/ligonier-audio-app/1200x1200_RYM_Podcast.jpg'
+                    'smallImageUrl': 'https://s3.us-east-2.amazonaws.com/ligonier-audio-app/700x700_5MiCH.jpg',
+                    'largeImageUrl': 'https://s3.us-east-2.amazonaws.com/ligonier-audio-app/1200x1200_5MiCH.jpg'
                 };
                 this.response.cardRenderer(cardTitle, cardContent, cardImage);
 
@@ -545,13 +550,13 @@ var controller = function () {
                         var cardTitle = podcast.title + ' (' + podcast.date + ')';
                         var cardContent = podcast.description;
                         var cardImage = {
-                            'smallImageUrl': 'https://s3.us-east-2.amazonaws.com/ligonier-audio-app/720x720_RYM_Podcast.jpg',
-                            'largeImageUrl': 'https://s3.us-east-2.amazonaws.com/ligonier-audio-app/1200x1200_RYM_Podcast.jpg'
+                            'smallImageUrl': 'https://s3.us-east-2.amazonaws.com/ligonier-audio-app/700x700_5MiCH.jpg',
+                            'largeImageUrl': 'https://s3.us-east-2.amazonaws.com/ligonier-audio-app/1200x1200_5MiCH.jpg'
                         };
                         this.response.cardRenderer(cardTitle, cardContent, cardImage);
                     }
 
-                    var message = 'You\'re listening to the most recent edition. Say, Previous, to listen to earlier editions.';
+                    var message = 'You\'re listening to the most recent episode. Say, Previous, to listen to earlier episodes.';
                     VoiceInsights.track('CommandNext', null, message, (error, response) => {
                         this.response.speak(message).audioPlayerPlay(playBehavior, podcast.url, token, null, offsetInMilliseconds);
                         this.emit(':responseReady');
@@ -586,13 +591,13 @@ var controller = function () {
                         var cardTitle = podcast.title + ' (' + podcast.date + ')';
                         var cardContent = podcast.description;
                         var cardImage = {
-                            'smallImageUrl': 'https://s3.us-east-2.amazonaws.com/ligonier-audio-app/720x720_RYM_Podcast.jpg',
-                            'largeImageUrl': 'https://s3.us-east-2.amazonaws.com/ligonier-audio-app/1200x1200_RYM_Podcast.jpg'
+                            'smallImageUrl': 'https://s3.us-east-2.amazonaws.com/ligonier-audio-app/700x700_5MiCH.jpg',
+                            'largeImageUrl': 'https://s3.us-east-2.amazonaws.com/ligonier-audio-app/1200x1200_5MiCH.jpg'
                         };
                         this.response.cardRenderer(cardTitle, cardContent, cardImage);
                     }
 
-                    var message = 'You\'re listening to the most recent edition. Say, Previous, to listen to earlier editions.';
+                    var message = 'You\'re listening to the most recent episode. Say, Previous, to listen to earlier episodes.';
                     VoiceInsights.track('AutoNext', null, message, (error, response) => {
                         this.response.speak(message).audioPlayerStop();
                         this.emit(':responseReady');
@@ -628,13 +633,13 @@ var controller = function () {
                         var cardTitle = podcast.title + ' (' + podcast.date + ')';
                         var cardContent = podcast.description;
                         var cardImage = {
-                            'smallImageUrl': 'https://s3.us-east-2.amazonaws.com/ligonier-audio-app/720x720_RYM_Podcast.jpg',
-                            'largeImageUrl': 'https://s3.us-east-2.amazonaws.com/ligonier-audio-app/1200x1200_RYM_Podcast.jpg'
+                            'smallImageUrl': 'https://s3.us-east-2.amazonaws.com/ligonier-audio-app/700x700_5MiCH.jpg',
+                            'largeImageUrl': 'https://s3.us-east-2.amazonaws.com/ligonier-audio-app/1200x1200_5MiCH.jpg'
                         };
                         this.response.cardRenderer(cardTitle, cardContent, cardImage);
                     }
 
-                    var message = 'You have reached the last available edition. Visit Renewing Your Mind dot org to access older editions';
+                    var message = 'You have reached the last available episode. Visit Five Minutes in Church History dot com to access older episodes';
                     VoiceInsights.track('CommandPrevious', null, message, (error, response) => {
                         this.response.speak(message).audioPlayerPlay(playBehavior, podcast.url, token, null, offsetInMilliseconds);
                         this.emit(':responseReady');
@@ -665,7 +670,7 @@ var controller = function () {
                     // Reached at the end. Thus reset state to start mode and stop playing.
                     this.handler.state = constants.states.START_MODE;
 
-                    var message = 'You have reached the last available edition. Visit Renewing Your Mind dot org to access older editions';
+                    var message = 'You have reached the last available episode. Visit Five Minutes in Church History dot com to access older episodes';
                     VoiceInsights.track('AutoPrevious', null, message, (error, response) => {
                         this.response.speak(message).audioPlayerStop();
                         this.emit(':responseReady');
