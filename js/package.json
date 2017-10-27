@@ -1,0 +1,27 @@
+{
+  "name": "rym_alexa",
+  "version": "1.0.0",
+  "description": "A podcast player for RYM.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "alexa",
+    "skill",
+    "audio player",
+    "refnet"
+  ],
+  "author": "Michael Calvo",
+  "license": "See license in ../LICENSE.txt",
+  "dependencies": {
+    "alexa-sdk": "^1.0.4",
+    "csvtojson": "^1.0.3",
+    "request" : "^2.79.0"
+    "voice-insights-sdk": "^1.2.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mcalvo/alexa_rym"
+  }
+}
