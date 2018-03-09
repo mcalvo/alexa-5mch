@@ -2,10 +2,10 @@
 
 const Alexa = require('alexa-sdk');
 const VoiceInsights = require('voice-insights-sdk');
-const request = require('request');
+const Feed = require('rss-to-json');
 const constants = require('./constants');
 const utils = require('./utils');
-const request_string = 'http://www.ligonier.org/podcasts/5-minutes-church-history/alexa.json';
+const request_string = 'https://5minutesinchurchhistory.ligonier.org/rss';
 
 function initializeSession(body) {
     let today = new Date();
@@ -15,7 +15,7 @@ function initializeSession(body) {
     this.attributes.shuffle = false;
     this.attributes.playbackIndexChanged = true;
     this.handler.state = constants.states.START_MODE;
-    this.attributes.audioData = JSON.parse(body);
+    this.attributes.audioData = body.items;
     this.attributes.dataRefresh = today.toString();
     this.attributes.playOrder = Array.apply(null, {
         length: this.attributes.audioData.length
@@ -33,11 +33,11 @@ const stateHandlers = {
             if (this.attributes.dataRefresh){
                 let dr = new Date(this.attributes.dataRefresh);
                 if (dr < today) {
-                    request(request_string, function(error, response, body) {
+                    Feed.load(request_string, function(error, body){
                         initializeSession.call(this, body);
 
                         var podcast = this.attributes.audioData[this.attributes.playOrder[this.attributes.index]];
-                        let message = 'Welcome to Five Minutes in Church History. Today\'s episode is titled ' + podcast.title;
+                        let message = 'Welcome to Five Minutes in Church History. The latest episode is titled ' + podcast.title;
 
                         VoiceInsights.track('StartLaunchRefresh', null, message, (error, response) => {
                             this.response.speak(message);
@@ -46,18 +46,18 @@ const stateHandlers = {
                     }.bind(this));
                 } else {
                     var podcast = this.attributes.audioData[this.attributes.playOrder[this.attributes.index]];
-                    let message = 'Welcome to Five Minutes in Church History. Today\'s episode is titled ' + podcast.title;
+                    let message = 'Welcome to Five Minutes in Church History. The latest episode is titled ' + podcast.title;
                     VoiceInsights.track('StartLaunch', null, message, (error, response) => {
                         this.response.speak(message);
                         controller.play.call(this);
                     });
                 }
             } else {
-                request(request_string, function(error, response, body) {
+                Feed.load(request_string, function(error, body){
                     initializeSession.call(this, body);
 
                     var podcast = this.attributes.audioData[this.attributes.playOrder[this.attributes.index]];
-                    let message = 'Welcome to Five Minutes in Church History. Today\'s episode is titled ' + podcast.title;
+                    let message = 'Welcome to Five Minutes in Church History. The latest episode is titled ' + podcast.title;
 
                     VoiceInsights.track('StartLaunchRefresh', null, message, (error, response) => {
                         this.response.speak(message);
@@ -68,7 +68,7 @@ const stateHandlers = {
         },
         'PlayAudio' : function () {
             if (!this.attributes.playOrder) {
-                request(request_string, function(error, response, body) {
+                Feed.load(request_string, function(error, body){
                     initializeSession.call(this, body);
                     VoiceInsights.track('StartPlayRefresh', null, null, (error, response) => {
                         controller.play.call(this);
@@ -83,11 +83,11 @@ const stateHandlers = {
         'AMAZON.HelpIntent' : function () {
             var podcast = this.attributes.audioData[this.attributes.playOrder[this.attributes.index]];
 
-            var message = 'You\'re listening to Five Minutes in Church History for ' + podcast.date + ' titled ' + podcast.title + '. You can say Pause, or, Resume, to control playback. To listen to an earlier episode, say Previous. To return to the most recent episode, say Today\'s Episode. To learn more about Five Minutes in Church History, say About. What can I help you with?';
+            var message = 'You\'re listening to Five Minutes in Church History for ' + podcast.date + ' titled ' + podcast.title + '. You can say Pause, or, Resume, to control playback. To listen to an earlier episode, say Previous. To return to the most recent episode, say Latest Episode. To learn more about Five Minutes in Church History, say About. What can I help you with?';
             var reprompt = 'What can I help you with?';
 
             var cardTitle = 'Help with Five Minutes in Church History';
-            var cardContent = 'You\'re listening to Five Minutes in Church History for ' + podcast.date + ' titled \"' + podcast.title + '\".\nSay "Pause" or "Resume" to control playback.\nSay \"Alexa, ask Five Minutes in Church History to play today\'s episode\" to play the most recent episode.\nSay "Previous" to listen to an earlier episode.';
+            var cardContent = 'You\'re listening to Five Minutes in Church History for ' + podcast.date + ' titled \"' + podcast.title + '\".\nSay "Pause" or "Resume" to control playback.\nSay \"Alexa, ask Church History to play the latest episode\" to play the most recent episode.\nSay "Previous" to listen to an earlier episode.';
             this.response.cardRenderer(cardTitle, cardContent, null);
 
             VoiceInsights.track('StartHelp', null, message, (error, response) => {
@@ -108,11 +108,11 @@ const stateHandlers = {
             if (this.attributes.dataRefresh){
                 let dr = new Date(this.attributes.dataRefresh);
                 if (dr != today) {
-                    request(request_string, function(error, response, body) {
+                    Feed.load(request_string, function(error, body){
                         initializeSession.call(this, body);
 
                         var podcast = this.attributes.audioData[this.attributes.playOrder[this.attributes.index]];
-                        let message = 'Welcome to Five Minutes in Church History. Today\'s episode is titled ' + podcast.title;
+                        let message = 'Welcome to Five Minutes in Church History. The latest episode is titled ' + podcast.title;
 
                         VoiceInsights.track('StartTodayRefresh', null, message, (error, response) => {
                             this.response.speak(message);
@@ -121,17 +121,17 @@ const stateHandlers = {
                     }.bind(this));
                 } else {
                     var podcast = this.attributes.audioData[this.attributes.playOrder[this.attributes.index]];
-                    let message = 'Welcome to Five Minutes in Church History. Today\'s episode is titled ' + podcast.title;
+                    let message = 'Welcome to Five Minutes in Church History. The latest episode is titled ' + podcast.title;
                     VoiceInsights.track('StartToday', null, message, (error, response) => {
                         controller.play.call(this);
                     });
                 }
             } else {
-                request(request_string, function(error, response, body) {
+                Feed.load(request_string, function(error, body){
                     initializeSession.call(this, body);
 
                     var podcast = this.attributes.audioData[this.attributes.playOrder[this.attributes.index]];
-                    let message = 'Welcome to Five Minutes in Church History. Today\'s episode is titled ' + podcast.title;
+                    let message = 'Welcome to Five Minutes in Church History. The latest episode is titled ' + podcast.title;
 
                     VoiceInsights.track('StartTodayRefresh', null, message, (error, response) => {
                         this.response.speak(message);
@@ -180,11 +180,11 @@ const stateHandlers = {
                 if (this.attributes.dataRefresh){
                     let dr = new Date(this.attributes.dataRefresh);
                     if (dr != today) {
-                        request(request_string, function(error, response, body) {
+                        Feed.load(request_string, function(error, body){
                             initializeSession.call(this, body);
 
                             var podcast = this.attributes.audioData[this.attributes.playOrder[this.attributes.index]];
-                            let message = 'Welcome to Five Minutes in Church History. Today\'s episode is titled ' + podcast.title;
+                            let message = 'Welcome to Five Minutes in Church History. The latest episode is titled ' + podcast.title;
 
                             VoiceInsights.track('PlayLaunchRefresh', null, message, (error, response) => {
                                 this.response.speak(message);
@@ -193,17 +193,17 @@ const stateHandlers = {
                         }.bind(this));
                     } else {
                         var podcast = this.attributes.audioData[this.attributes.playOrder[this.attributes.index]];
-                        let message = 'Welcome to Five Minutes in Church History. Today\'s episode is titled ' + podcast.title;
+                        let message = 'Welcome to Five Minutes in Church History. The latest episode is titled ' + podcast.title;
                         VoiceInsights.track('PlayLaunch', null, message, (error, response) => {
                             controller.play.call(this);
                         });
                     }
                 } else {
-                    request(request_string, function(error, response, body) {
+                    Feed.load(request_string, function(error, body){
                         initializeSession.call(this, body);
 
                         var podcast = this.attributes.audioData[this.attributes.playOrder[this.attributes.index]];
-                        let message = 'Welcome to Five Minutes in Church History. Today\'s episode is titled ' + podcast.title;
+                        let message = 'Welcome to Five Minutes in Church History. The latest episode is titled ' + podcast.title;
 
                         VoiceInsights.track('PlayLaunchRefresh', null, message, (error, response) => {
                             this.response.speak(message);
@@ -216,7 +216,7 @@ const stateHandlers = {
                 var podcast = this.attributes.audioData[this.attributes.playOrder[this.attributes.index]];
                 message = 'Welcome back to Five Minutes in Church History. Previously you were listening to the episode from ' + podcast.date +
                     ' titled ' + podcast.title + '. Would you like to resume that episode?';
-                reprompt = 'Say yes to resume the episode from ' + podcast.date + ' titled ' + podcast.title + ', or say no to play today\'s episode.';
+                reprompt = 'Say yes to resume the episode from ' + podcast.date + ' titled ' + podcast.title + ', or say no to play the latest episode.';
 
                 VoiceInsights.track('PlayLaunchResume', null, message, (error, response) => {
                     this.response.speak(message).listen(reprompt);
@@ -272,11 +272,11 @@ const stateHandlers = {
         'AMAZON.HelpIntent' : function () {
             var podcast = this.attributes.audioData[this.attributes.playOrder[this.attributes.index]];
 
-            var message = 'You\'re listening to Five Minutes in Church History for ' + podcast.date + ' titled ' + podcast.title + '. You can say Pause, or, Resume, to control playback. To listen to an earlier episode, say Previous. To return to the most recent episode, say Today\'s Episode. To learn more about Five Minutes in Church History, say About. What can I help you with?';
+            var message = 'You\'re listening to Five Minutes in Church History for ' + podcast.date + ' titled ' + podcast.title + '. You can say Pause, or, Resume, to control playback. To listen to an earlier episode, say Previous. To return to the most recent episode, say Latest Episode. To learn more about Five Minutes in Church History, say About. What can I help you with?';
             var reprompt = 'What can I help you with?';
 
             var cardTitle = 'Help with Five Minutes in Church History';
-            var cardContent = 'You\'re listening to Five Minutes in Church History for ' + podcast.date + ' titled \"' + podcast.title + '\".\nSay "Pause" or "Resume" to control playback.\nSay \"Alexa, ask Five Minutes in Church History to play today\'s episode\" to play the most recent episode.\nSay "Previous" to listen to an earlier episode.';
+            var cardContent = 'You\'re listening to Five Minutes in Church History for ' + podcast.date + ' titled \"' + podcast.title + '\".\nSay "Pause" or "Resume" to control playback.\nSay \"Alexa, ask Church History to play the latest episode\" to play the most recent episode.\nSay "Previous" to listen to an earlier episode.';
             this.response.cardRenderer(cardTitle, cardContent, null);
 
 
@@ -298,11 +298,11 @@ const stateHandlers = {
             if (this.attributes.dataRefresh){
                 let dr = new Date(this.attributes.dataRefresh);
                 if (dr != today) {
-                    request(request_string, function(error, response, body) {
+                    Feed.load(request_string, function(error, body){
                         initializeSession.call(this, body);
 
                         var podcast = this.attributes.audioData[this.attributes.playOrder[this.attributes.index]];
-                        let message = 'Today\'s episode is titled ' + podcast.title;
+                        let message = 'Welcome to Five Minutes in Church History. The latest episode is titled ' + podcast.title;
 
                         VoiceInsights.track('PlayTodayRefresh', null, message, (error, response) => {
                             this.response.speak(message);
@@ -311,17 +311,17 @@ const stateHandlers = {
                     }.bind(this));
                 } else {
                     var podcast = this.attributes.audioData[this.attributes.playOrder[this.attributes.index]];
-                    let message = 'Today\'s episode is titled ' + podcast.title;
+                    let message = 'Welcome to Five Minutes in Church History. The latest episode is titled ' + podcast.title;
                     VoiceInsights.track('PlayToday', null, message, (error, response) => {
                         controller.play.call(this);
                     });
                 }
             } else {
-                request(request_string, function(error, response, body) {
+                Feed.load(request_string, function(error, body){
                     initializeSession.call(this, body);
 
                     var podcast = this.attributes.audioData[this.attributes.playOrder[this.attributes.index]];
-                    let message = 'Today\'s episode is titled ' + podcast.title;
+                    let message = 'Welcome to Five Minutes in Church History. The latest episode is titled ' + podcast.title;
 
                     VoiceInsights.track('PlayTodayRefresh', null, message, (error, response) => {
                         this.response.speak(message);
@@ -359,7 +359,7 @@ const stateHandlers = {
 
             let message = 'Welcome back to Five Minutes in Church History. Previously you were listening to the episode from ' + podcast.date +
                 ' titled ' + podcast.title + '. Would you like to resume that episode?';
-            let reprompt = 'Say yes to resume the episode from ' + podcast.date + ' titled ' + podcast.title + ', or say no to play today\'s episode.';
+            let reprompt = 'Say yes to resume the episode from ' + podcast.date + ' titled ' + podcast.title + ', or say no to play the latest episode.';
 
             VoiceInsights.track('ResumeLaunch', null, message, (error, response) => {
                 this.response.speak(message).listen(reprompt);
@@ -374,14 +374,27 @@ const stateHandlers = {
         'AMAZON.NoIntent' : function () {
             VoiceInsights.track('ResumeNo', null, null, (error, response) => {
                 // We can do a feed refresh on reset
-                controller.reset.call(this)
+                Feed.load(request_string, function(error, body) {
+                    initializeSession.call(this, body);
+                    var token = String(this.attributes.playOrder[this.attributes.index]);
+                    var playBehavior = 'REPLACE_ALL';
+                    var podcast = this.attributes.audioData[this.attributes.playOrder[this.attributes.index]];
+                    var offsetInMilliseconds = this.attributes.offsetInMilliseconds;
+                    this.attributes.playbackIndexChanged = true;
+                    // Since play behavior is REPLACE_ALL, enqueuedToken attribute need to be set to null.
+                    this.attributes.enqueuedToken = null;
+
+                    let message = 'Playing the latest episode titled ' + podcast.title;
+                    this.response.speak(message);
+                    controller.play.call(this);
+                }.bind(this));
             });
         },
         'AMAZON.HelpIntent' : function () {
             var podcast = this.attributes.audioData[this.attributes.playOrder[this.attributes.index]];
 
             let message = 'Previously you were listening to the episode from ' + podcast.date + ' titled ' + podcast.title + '. Would you like to resume that episode?';
-            let reprompt = 'Say yes to resume the episode from ' + podcast.date + ' titled ' + podcast.title + ', or say no to play today\'s episode.';
+            let reprompt = 'Say yes to resume the episode from ' + podcast.date + ' titled ' + podcast.title + ', or say no to play the latest episode.';
 
             VoiceInsights.track('ResumeHelp', null, message, (error, response) => {
                 this.response.speak(message).listen(reprompt);
@@ -413,11 +426,11 @@ const stateHandlers = {
             if (this.attributes.dataRefresh){
                 let dr = new Date(this.attributes.dataRefresh);
                 if (dr != today) {
-                    request(request_string, function(error, response, body) {
+                    Feed.load(request_string, function(error, body){
                         initializeSession.call(this, body);
 
                         var podcast = this.attributes.audioData[this.attributes.playOrder[this.attributes.index]];
-                        let message = 'Today\'s episode is titled ' + podcast.title;
+                        let message = 'Welcome to Five Minutes in Church History. The latest episode is titled ' + podcast.title;
 
                         VoiceInsights.track('ResumeTodayRefresh', null, message, (error, response) => {
                             this.response.speak(message);
@@ -426,18 +439,18 @@ const stateHandlers = {
                     }.bind(this));
                 } else {
                     var podcast = this.attributes.audioData[this.attributes.playOrder[this.attributes.index]];
-                    let message = 'Today\'s episode is titled ' + podcast.title;
+                    let message = 'Welcome to Five Minutes in Church History. The latest episode is titled ' + podcast.title;
                     VoiceInsights.track('ResumeToday', null, message, (error, response) => {
                         this.response.speak(message);
                         controller.play.call(this);
                     });
                 }
             } else {
-                request(request_string, function(error, response, body) {
+                Feed.load(request_string, function(error, body){
                     initializeSession.call(this, body);
 
                     var podcast = this.attributes.audioData[this.attributes.playOrder[this.attributes.index]];
-                    let message = 'Today\'s episode is titled ' + podcast.title;
+                    let message = 'Welcome to Five Minutes in Church History. The latest episode is titled ' + podcast.title;
 
                     VoiceInsights.track('ResumeTodayRefresh', null, message, (error, response) => {
                         this.response.speak(message);
@@ -473,7 +486,7 @@ var controller = function () {
             this.handler.state = constants.states.PLAY_MODE;
 
             if (this.attributes['playbackFinished']) {
-                request(request_string, function(error, response, body) {
+                Feed.load(request_string, function(error, body){
                     initializeSession.call(this, body);
 
                     var token = String(this.attributes.playOrder[this.attributes.index]);
@@ -487,13 +500,13 @@ var controller = function () {
                         var cardTitle = podcast.title + ' (' + podcast.date + ')';
                         var cardContent = podcast.description;
                         var cardImage = {
-                            'smallImageUrl': 'https://s3.us-east-2.amazonaws.com/ligonier-audio-app/700x700_5MiCH.jpg',
-                            'largeImageUrl': 'https://s3.us-east-2.amazonaws.com/ligonier-audio-app/1200x1200_5MiCH.jpg'
+                            'smallImageUrl': 'https://s3.amazonaws.com/ligonier-echo-apps/700x700_5MiCH.jpg',
+                            'largeImageUrl': 'https://s3.amazonaws.com/ligonier-echo-apps/1200x1200_5MiCH.jpg'
                         };
                         this.response.cardRenderer(cardTitle, cardContent, cardImage);
                     }
 
-                    this.response.audioPlayerPlay(playBehavior, podcast.url, token, null, offsetInMilliseconds);
+                    this.response.audioPlayerPlay(playBehavior, podcast.url.replace("http", "https"), token, null, offsetInMilliseconds);
                     this.emit(':responseReady');
                 }.bind(this));
             } else {
@@ -507,8 +520,8 @@ var controller = function () {
                 var cardTitle = podcast.title + ' (' + podcast.date + ')';
                 var cardContent = podcast.description;
                 var cardImage = {
-                    'smallImageUrl': 'https://s3.us-east-2.amazonaws.com/ligonier-audio-app/700x700_5MiCH.jpg',
-                    'largeImageUrl': 'https://s3.us-east-2.amazonaws.com/ligonier-audio-app/1200x1200_5MiCH.jpg'
+                    'smallImageUrl': 'https://s3.amazonaws.com/ligonier-echo-apps/700x700_5MiCH.jpg',
+                    'largeImageUrl': 'https://s3.amazonaws.com/ligonier-echo-apps/1200x1200_5MiCH.jpg'
                 };
                 this.response.cardRenderer(cardTitle, cardContent, cardImage);
 
@@ -547,8 +560,8 @@ var controller = function () {
                         var cardTitle = podcast.title + ' (' + podcast.date + ')';
                         var cardContent = podcast.description;
                         var cardImage = {
-                            'smallImageUrl': 'https://s3.us-east-2.amazonaws.com/ligonier-audio-app/700x700_5MiCH.jpg',
-                            'largeImageUrl': 'https://s3.us-east-2.amazonaws.com/ligonier-audio-app/1200x1200_5MiCH.jpg'
+                            'smallImageUrl': 'https://s3.amazonaws.com/ligonier-echo-apps/700x700_5MiCH.jpg',
+                            'largeImageUrl': 'https://s3.amazonaws.com/ligonier-echo-apps/1200x1200_5MiCH.jpg'
                         };
                         this.response.cardRenderer(cardTitle, cardContent, cardImage);
                     }
@@ -588,8 +601,8 @@ var controller = function () {
                         var cardTitle = podcast.title + ' (' + podcast.date + ')';
                         var cardContent = podcast.description;
                         var cardImage = {
-                            'smallImageUrl': 'https://s3.us-east-2.amazonaws.com/ligonier-audio-app/700x700_5MiCH.jpg',
-                            'largeImageUrl': 'https://s3.us-east-2.amazonaws.com/ligonier-audio-app/1200x1200_5MiCH.jpg'
+                            'smallImageUrl': 'https://s3.amazonaws.com/ligonier-echo-apps/700x700_5MiCH.jpg',
+                            'largeImageUrl': 'https://s3.amazonaws.com/ligonier-echo-apps/1200x1200_5MiCH.jpg'
                         };
                         this.response.cardRenderer(cardTitle, cardContent, cardImage);
                     }
@@ -630,8 +643,8 @@ var controller = function () {
                         var cardTitle = podcast.title + ' (' + podcast.date + ')';
                         var cardContent = podcast.description;
                         var cardImage = {
-                            'smallImageUrl': 'https://s3.us-east-2.amazonaws.com/ligonier-audio-app/700x700_5MiCH.jpg',
-                            'largeImageUrl': 'https://s3.us-east-2.amazonaws.com/ligonier-audio-app/1200x1200_5MiCH.jpg'
+                            'smallImageUrl': 'https://s3.amazonaws.com/ligonier-echo-apps/700x700_5MiCH.jpg',
+                            'largeImageUrl': 'https://s3.amazonaws.com/ligonier-echo-apps/1200x1200_5MiCH.jpg'
                         };
                         this.response.cardRenderer(cardTitle, cardContent, cardImage);
                     }
@@ -725,7 +738,7 @@ var controller = function () {
         },
         reset: function () {
             // Update audioData
-            request(request_string, function(error, response, body) {
+            Feed.load(request_string, function(error, body){
                 initializeSession.call(this, body);
                 var token = String(this.attributes.playOrder[this.attributes.index]);
                 var playBehavior = 'REPLACE_ALL';
