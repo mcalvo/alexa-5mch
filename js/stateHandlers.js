@@ -1,7 +1,6 @@
 'use strict';
 
 const Alexa = require('alexa-sdk');
-const VoiceInsights = require('voice-insights-sdk');
 const Feed = require('rss-to-json');
 const constants = require('./constants');
 const utils = require('./utils');
@@ -39,18 +38,14 @@ const stateHandlers = {
                         var podcast = this.attributes.audioData[this.attributes.playOrder[this.attributes.index]];
                         let message = 'Welcome to Five Minutes in Church History. The latest episode is titled ' + podcast.title;
 
-                        VoiceInsights.track('StartLaunchRefresh', null, message, (error, response) => {
-                            this.response.speak(message);
-                            controller.play.call(this);
-                        });
+                        this.response.speak(message);
+                        controller.play.call(this);
                     }.bind(this));
                 } else {
                     var podcast = this.attributes.audioData[this.attributes.playOrder[this.attributes.index]];
                     let message = 'Welcome to Five Minutes in Church History. The latest episode is titled ' + podcast.title;
-                    VoiceInsights.track('StartLaunch', null, message, (error, response) => {
-                        this.response.speak(message);
-                        controller.play.call(this);
-                    });
+                    this.response.speak(message);
+                    controller.play.call(this);
                 }
             } else {
                 Feed.load(request_string, function(error, body){
@@ -59,10 +54,8 @@ const stateHandlers = {
                     var podcast = this.attributes.audioData[this.attributes.playOrder[this.attributes.index]];
                     let message = 'Welcome to Five Minutes in Church History. The latest episode is titled ' + podcast.title;
 
-                    VoiceInsights.track('StartLaunchRefresh', null, message, (error, response) => {
-                        this.response.speak(message);
-                        controller.play.call(this);
-                    });
+                    this.response.speak(message);
+                    controller.play.call(this);
                 }.bind(this));
             }
         },
@@ -70,14 +63,10 @@ const stateHandlers = {
             if (!this.attributes.playOrder) {
                 Feed.load(request_string, function(error, body){
                     initializeSession.call(this, body);
-                    VoiceInsights.track('StartPlayRefresh', null, null, (error, response) => {
-                        controller.play.call(this);
-                    });
+                    controller.play.call(this);
                 }.bind(this));
             } else {
-                VoiceInsights.track('StartPlay', null, null, (error, response) => {
-                    controller.play.call(this);
-                });
+                controller.play.call(this);
             }
         },
         'AMAZON.HelpIntent' : function () {
@@ -90,18 +79,14 @@ const stateHandlers = {
             var cardContent = 'You\'re listening to Five Minutes in Church History for ' + podcast.date + ' titled \"' + podcast.title + '\".\nSay "Pause" or "Resume" to control playback.\nSay \"Alexa, ask Church History to play the latest episode\" to play the most recent episode.\nSay "Previous" to listen to an earlier episode.';
             this.response.cardRenderer(cardTitle, cardContent, null);
 
-            VoiceInsights.track('StartHelp', null, message, (error, response) => {
-                this.response.speak(message).listen(reprompt);
-                this.emit(':responseReady');
-            });
+            this.response.speak(message).listen(reprompt);
+            this.emit(':responseReady');
         },
         'AboutIntent': function() {
             var message = "Five Minutes in Church History, hosted by Dr. Stephen Nichols, is a weekly podcast that provides an informal and informative look at church history. Join us each week as we take a brief break from the present to go exploring the past. Five Minutes in Church History is an outreach of Ligonier.";
 
-            VoiceInsights.track('StartAbout', null, message, (error, response) => {
-                this.response.speak(message);
-                this.emit(':responseReady');
-            });
+            this.response.speak(message);
+            this.emit(':responseReady');
         },
         'TodayIntent': function() {
             let today = new Date();
@@ -114,17 +99,13 @@ const stateHandlers = {
                         var podcast = this.attributes.audioData[this.attributes.playOrder[this.attributes.index]];
                         let message = 'Welcome to Five Minutes in Church History. The latest episode is titled ' + podcast.title;
 
-                        VoiceInsights.track('StartTodayRefresh', null, message, (error, response) => {
-                            this.response.speak(message);
-                            controller.play.call(this);
-                        });
+                        this.response.speak(message);
+                        controller.play.call(this);
                     }.bind(this));
                 } else {
                     var podcast = this.attributes.audioData[this.attributes.playOrder[this.attributes.index]];
                     let message = 'Welcome to Five Minutes in Church History. The latest episode is titled ' + podcast.title;
-                    VoiceInsights.track('StartToday', null, message, (error, response) => {
-                        controller.play.call(this);
-                    });
+                    controller.play.call(this);
                 }
             } else {
                 Feed.load(request_string, function(error, body){
@@ -133,10 +114,8 @@ const stateHandlers = {
                     var podcast = this.attributes.audioData[this.attributes.playOrder[this.attributes.index]];
                     let message = 'Welcome to Five Minutes in Church History. The latest episode is titled ' + podcast.title;
 
-                    VoiceInsights.track('StartTodayRefresh', null, message, (error, response) => {
-                        this.response.speak(message);
-                        controller.play.call(this);
-                    });
+                    this.response.speak(message);
+                    controller.play.call(this);
                 }.bind(this));
             }
         },
@@ -153,10 +132,8 @@ const stateHandlers = {
         },
         'Unhandled' : function () {
             let message = 'Sorry, I could not understand.';
-            VoiceInsights.track('Unhandled', null, message, (error, response) => {
-                this.response.speak(message);
-                this.emit(':responseReady');
-            });
+            this.response.speak(message);
+            this.emit(':responseReady');
         }
     }),
     playModeIntentHandlers : Alexa.CreateStateHandler(constants.states.PLAY_MODE, {
@@ -186,17 +163,13 @@ const stateHandlers = {
                             var podcast = this.attributes.audioData[this.attributes.playOrder[this.attributes.index]];
                             let message = 'Welcome to Five Minutes in Church History. The latest episode is titled ' + podcast.title;
 
-                            VoiceInsights.track('PlayLaunchRefresh', null, message, (error, response) => {
-                                this.response.speak(message);
-                                controller.play.call(this);
-                            });
+                            this.response.speak(message);
+                            controller.play.call(this);
                         }.bind(this));
                     } else {
                         var podcast = this.attributes.audioData[this.attributes.playOrder[this.attributes.index]];
                         let message = 'Welcome to Five Minutes in Church History. The latest episode is titled ' + podcast.title;
-                        VoiceInsights.track('PlayLaunch', null, message, (error, response) => {
-                            controller.play.call(this);
-                        });
+                        controller.play.call(this);
                     }
                 } else {
                     Feed.load(request_string, function(error, body){
@@ -205,10 +178,8 @@ const stateHandlers = {
                         var podcast = this.attributes.audioData[this.attributes.playOrder[this.attributes.index]];
                         let message = 'Welcome to Five Minutes in Church History. The latest episode is titled ' + podcast.title;
 
-                        VoiceInsights.track('PlayLaunchRefresh', null, message, (error, response) => {
-                            this.response.speak(message);
-                            controller.play.call(this);
-                        });
+                        this.response.speak(message);
+                        controller.play.call(this);
                     }.bind(this));
                 }
             } else {
@@ -218,16 +189,12 @@ const stateHandlers = {
                     ' titled ' + podcast.title + '. Would you like to resume that episode?';
                 reprompt = 'Say yes to resume the episode from ' + podcast.date + ' titled ' + podcast.title + ', or say no to play the latest episode.';
 
-                VoiceInsights.track('PlayLaunchResume', null, message, (error, response) => {
-                    this.response.speak(message).listen(reprompt);
-                    this.emit(':responseReady');
-                });
+                this.response.speak(message).listen(reprompt);
+                this.emit(':responseReady');
             }
         },
         'PlayAudio' : function () {
-            VoiceInsights.track('PlayAudio', null, null, (error, response) => {
-                controller.play.call(this);
-            });
+            controller.play.call(this);
         },
         'AMAZON.NextIntent' : function () { controller.cNext.call(this) },
         'AMAZON.PreviousIntent' : function () { controller.cPrevious.call(this) },
@@ -237,37 +204,27 @@ const stateHandlers = {
         'AMAZON.ResumeIntent' : function () { controller.play.call(this) },
         'AMAZON.LoopOnIntent': function() {
             var message = 'Sorry. This skill does not support looping.';
-            VoiceInsights.track('PlayLoopOn', null, message, (error, response) => {
-                this.response.speak(message);
-                this.emit(':responseReady');
-            });
+            this.response.speak(message);
+            this.emit(':responseReady');
         },
         'AMAZON.LoopOffIntent' : function () {
             var message = 'Sorry. This skill does not support looping.';
 
-            VoiceInsights.track('PlayLoopOff', null, message, (error, response) => {
-                this.response.speak(message);
-                this.emit(':responseReady');
-            });
+            this.response.speak(message);
+            this.emit(':responseReady');
         },
         'AMAZON.ShuffleOnIntent' : function () {
             var message = 'Sorry. This skill does not support shuffling.';
-            VoiceInsights.track('PlayShuffleOn', null, message, (error, response) => {
-                this.response.speak(message);
-                this.emit(':responseReady');
-            });
+            this.response.speak(message);
+            this.emit(':responseReady');
         },
         'AMAZON.ShuffleOffIntent' : function () {
             var message = 'Sorry. This skill does not support shuffling.';
-            VoiceInsights.track('PlayShuffleOff', null, message, (error, response) => {
-                this.response.speak(message);
-                this.emit(':responseReady');
-            });
+            this.response.speak(message);
+            this.emit(':responseReady');
         },
         'AMAZON.StartOverIntent' : function () {
-            VoiceInsights.track('PlayStartOver', null, null, (error, response) => {
-                controller.startOver.call(this)
-            });
+            controller.startOver.call(this)
         },
         'AMAZON.HelpIntent' : function () {
             var podcast = this.attributes.audioData[this.attributes.playOrder[this.attributes.index]];
@@ -280,18 +237,14 @@ const stateHandlers = {
             this.response.cardRenderer(cardTitle, cardContent, null);
 
 
-            VoiceInsights.track('PlayHelp', null, message, (error, response) => {
-                this.response.speak(message).listen(reprompt);
-                this.emit(':responseReady');
-            });
+            this.response.speak(message).listen(reprompt);
+            this.emit(':responseReady');
         },
         'AboutIntent': function() {
             var message = "Five Minutes in Church History, hosted by Dr. Stephen Nichols, is a weekly podcast that provides an informal and informative look at church history. Join us each week as we take a brief break from the present to go exploring the past. Five Minutes in Church History is an outreach of Ligonier.";
 
-            VoiceInsights.track('PlayAbout', null, message, (error, response) => {
-                this.response.speak(message);
-                this.emit(':responseReady');
-            });
+            this.response.speak(message);
+            this.emit(':responseReady');
         },
         'TodayIntent': function() {
             let today = new Date();
@@ -304,17 +257,13 @@ const stateHandlers = {
                         var podcast = this.attributes.audioData[this.attributes.playOrder[this.attributes.index]];
                         let message = 'Welcome to Five Minutes in Church History. The latest episode is titled ' + podcast.title;
 
-                        VoiceInsights.track('PlayTodayRefresh', null, message, (error, response) => {
-                            this.response.speak(message);
-                            controller.play.call(this);
-                        });
+                        this.response.speak(message);
+                        controller.play.call(this);
                     }.bind(this));
                 } else {
                     var podcast = this.attributes.audioData[this.attributes.playOrder[this.attributes.index]];
                     let message = 'Welcome to Five Minutes in Church History. The latest episode is titled ' + podcast.title;
-                    VoiceInsights.track('PlayToday', null, message, (error, response) => {
-                        controller.play.call(this);
-                    });
+                    controller.play.call(this);
                 }
             } else {
                 Feed.load(request_string, function(error, body){
@@ -323,10 +272,8 @@ const stateHandlers = {
                     var podcast = this.attributes.audioData[this.attributes.playOrder[this.attributes.index]];
                     let message = 'Welcome to Five Minutes in Church History. The latest episode is titled ' + podcast.title;
 
-                    VoiceInsights.track('PlayTodayRefresh', null, message, (error, response) => {
-                        this.response.speak(message);
-                        controller.play.call(this);
-                    });
+                    this.response.speak(message);
+                    controller.play.call(this);
                 }.bind(this));
             }
         },
@@ -335,10 +282,8 @@ const stateHandlers = {
         },
         'Unhandled' : function () {
             let message = 'Sorry, I could not understand.';
-            VoiceInsights.track('Unhandled', null, message, (error, response) => {
-                this.response.speak(message);
-                this.emit(':responseReady');
-            });
+            this.response.speak(message);
+            this.emit(':responseReady');
         }
     }),
     remoteControllerHandlers : Alexa.CreateStateHandler(constants.states.PLAY_MODE, {
@@ -361,34 +306,28 @@ const stateHandlers = {
                 ' titled ' + podcast.title + '. Would you like to resume that episode?';
             let reprompt = 'Say yes to resume the episode from ' + podcast.date + ' titled ' + podcast.title + ', or say no to play the latest episode.';
 
-            VoiceInsights.track('ResumeLaunch', null, message, (error, response) => {
-                this.response.speak(message).listen(reprompt);
-                this.emit(':responseReady');
-            });
+            this.response.speak(message).listen(reprompt);
+            this.emit(':responseReady');
         },
         'AMAZON.YesIntent' : function () {
-            VoiceInsights.track('ResumeYes', null, null, (error, response) => {
-                controller.play.call(this)
-            });
+            controller.play.call(this)
         },
         'AMAZON.NoIntent' : function () {
-            VoiceInsights.track('ResumeNo', null, null, (error, response) => {
-                // We can do a feed refresh on reset
-                Feed.load(request_string, function(error, body) {
-                    initializeSession.call(this, body);
-                    var token = String(this.attributes.playOrder[this.attributes.index]);
-                    var playBehavior = 'REPLACE_ALL';
-                    var podcast = this.attributes.audioData[this.attributes.playOrder[this.attributes.index]];
-                    var offsetInMilliseconds = this.attributes.offsetInMilliseconds;
-                    this.attributes.playbackIndexChanged = true;
-                    // Since play behavior is REPLACE_ALL, enqueuedToken attribute need to be set to null.
-                    this.attributes.enqueuedToken = null;
+            // We can do a feed refresh on reset
+            Feed.load(request_string, function(error, body) {
+                initializeSession.call(this, body);
+                var token = String(this.attributes.playOrder[this.attributes.index]);
+                var playBehavior = 'REPLACE_ALL';
+                var podcast = this.attributes.audioData[this.attributes.playOrder[this.attributes.index]];
+                var offsetInMilliseconds = this.attributes.offsetInMilliseconds;
+                this.attributes.playbackIndexChanged = true;
+                // Since play behavior is REPLACE_ALL, enqueuedToken attribute need to be set to null.
+                this.attributes.enqueuedToken = null;
 
-                    let message = 'Playing the latest episode titled ' + podcast.title;
-                    this.response.speak(message);
-                    controller.play.call(this);
-                }.bind(this));
-            });
+                let message = 'Playing the latest episode titled ' + podcast.title;
+                this.response.speak(message);
+                controller.play.call(this);
+            }.bind(this));
         },
         'AMAZON.HelpIntent' : function () {
             var podcast = this.attributes.audioData[this.attributes.playOrder[this.attributes.index]];
@@ -396,30 +335,22 @@ const stateHandlers = {
             let message = 'Previously you were listening to the episode from ' + podcast.date + ' titled ' + podcast.title + '. Would you like to resume that episode?';
             let reprompt = 'Say yes to resume the episode from ' + podcast.date + ' titled ' + podcast.title + ', or say no to play the latest episode.';
 
-            VoiceInsights.track('ResumeHelp', null, message, (error, response) => {
-                this.response.speak(message).listen(reprompt);
-                this.emit(':responseReady');
-            });
+            this.response.speak(message).listen(reprompt);
+            this.emit(':responseReady');
         },
         'AMAZON.StopIntent' : function () {
-            VoiceInsights.track('ResumeStop', null, null, (error, response) => {
-                controller.stop.call(this);
-                this.emit(':responseReady');
-            });
+            controller.stop.call(this);
+            this.emit(':responseReady');
         },
         'AMAZON.CancelIntent' : function () {
-            VoiceInsights.track('ResumeCancel', null, null, (error, response) => {
-                controller.stop.call(this);
-                this.emit(':responseReady');
-            });
+            controller.stop.call(this);
+            this.emit(':responseReady');
         },
         'AboutIntent': function() {
             var message = "Five Minutes in Church History, hosted by Dr. Stephen Nichols, is a weekly podcast that provides an informal and informative look at church history. Join us each week as we take a brief break from the present to go exploring the past. Five Minutes in Church History is an outreach of Ligonier.";
 
-            VoiceInsights.track('ResumeAbout', null, message, (error, response) => {
-                this.response.speak(message);
-                this.emit(':responseReady');
-            });
+            this.response.speak(message);
+            this.emit(':responseReady');
         },
         'TodayIntent': function() {
             let today = new Date();
@@ -432,18 +363,14 @@ const stateHandlers = {
                         var podcast = this.attributes.audioData[this.attributes.playOrder[this.attributes.index]];
                         let message = 'Welcome to Five Minutes in Church History. The latest episode is titled ' + podcast.title;
 
-                        VoiceInsights.track('ResumeTodayRefresh', null, message, (error, response) => {
-                            this.response.speak(message);
-                            controller.play.call(this);
-                        });
+                        this.response.speak(message);
+                        controller.play.call(this);
                     }.bind(this));
                 } else {
                     var podcast = this.attributes.audioData[this.attributes.playOrder[this.attributes.index]];
                     let message = 'Welcome to Five Minutes in Church History. The latest episode is titled ' + podcast.title;
-                    VoiceInsights.track('ResumeToday', null, message, (error, response) => {
-                        this.response.speak(message);
-                        controller.play.call(this);
-                    });
+                    this.response.speak(message);
+                    controller.play.call(this);
                 }
             } else {
                 Feed.load(request_string, function(error, body){
@@ -452,10 +379,8 @@ const stateHandlers = {
                     var podcast = this.attributes.audioData[this.attributes.playOrder[this.attributes.index]];
                     let message = 'Welcome to Five Minutes in Church History. The latest episode is titled ' + podcast.title;
 
-                    VoiceInsights.track('ResumeTodayRefresh', null, message, (error, response) => {
-                        this.response.speak(message);
-                        controller.play.call(this);
-                    });
+                    this.response.speak(message);
+                    controller.play.call(this);
                 }.bind(this));
             }
         },
@@ -464,10 +389,8 @@ const stateHandlers = {
         },
         'Unhandled' : function () {
             let message = 'Sorry, I could not understand.';
-            VoiceInsights.track('Unhandled', null, message, (error, response) => {
-                this.response.speak(message);
-                this.emit(':responseReady');
-            });
+            this.response.speak(message);
+            this.emit(':responseReady');
         }
     })
 };
@@ -534,10 +457,8 @@ var controller = function () {
              *  Issuing AudioPlayer.Stop directive to stop the audio.
              *  Attributes already stored when AudioPlayer.Stopped request received.
              */
-            VoiceInsights.track('AudioStop', null, null, (error, response) => {
-                this.response.audioPlayerStop();
-                this.emit(':responseReady');
-            });
+            this.response.audioPlayerStop();
+            this.emit(':responseReady');
         },
         cNext: function () {
             /*
@@ -567,10 +488,8 @@ var controller = function () {
                     }
 
                     var message = 'You\'re listening to the most recent episode. Say, Previous, to listen to earlier episodes.';
-                    VoiceInsights.track('CommandNext', null, message, (error, response) => {
-                        this.response.speak(message).audioPlayerPlay(playBehavior, podcast.url, token, null, offsetInMilliseconds);
-                        this.emit(':responseReady');
-                    });
+                    this.response.speak(message).audioPlayerPlay(playBehavior, podcast.url, token, null, offsetInMilliseconds);
+                    this.emit(':responseReady');
                 }
             } else {
                 // Set values to attributes.
@@ -608,10 +527,8 @@ var controller = function () {
                     }
 
                     var message = 'You\'re listening to the most recent episode. Say, Previous, to listen to earlier episodes.';
-                    VoiceInsights.track('AutoNext', null, message, (error, response) => {
-                        this.response.speak(message).audioPlayerStop();
-                        this.emit(':responseReady');
-                    });
+                    this.response.speak(message).audioPlayerStop();
+                    this.emit(':responseReady');
                 }
             } else {
                 // Set values to attributes.
@@ -650,10 +567,8 @@ var controller = function () {
                     }
 
                     var message = 'You have reached the last available episode. Visit Five Minutes in Church History dot com to access older episodes';
-                    VoiceInsights.track('CommandPrevious', null, message, (error, response) => {
-                        this.response.speak(message).audioPlayerPlay(playBehavior, podcast.url, token, null, offsetInMilliseconds);
-                        this.emit(':responseReady');
-                    });
+                    this.response.speak(message).audioPlayerPlay(playBehavior, podcast.url, token, null, offsetInMilliseconds);
+                    this.emit(':responseReady');
                 }
             } else {
                 // Set values to attributes.
@@ -681,10 +596,8 @@ var controller = function () {
                     this.handler.state = constants.states.START_MODE;
 
                     var message = 'You have reached the last available episode. Visit Five Minutes in Church History dot com to access older episodes';
-                    VoiceInsights.track('AutoPrevious', null, message, (error, response) => {
-                        this.response.speak(message).audioPlayerStop();
-                        this.emit(':responseReady');
-                    });
+                    this.response.speak(message).audioPlayerStop();
+                    this.emit(':responseReady');
                 }
             } else {
                 // Set values to attributes.
