@@ -4,7 +4,7 @@ const Alexa = require('alexa-sdk');
 const Feed = require('rss-to-json');
 const constants = require('./constants');
 const utils = require('./utils');
-const request_string = 'https://5minutesinchurchhistory.ligonier.org/rss';
+const request_string = 'https://5minutesinchurchhistory.ligonier.org/alexa';
 
 function initializeSession(body) {
     let today = new Date();
@@ -20,6 +20,13 @@ function initializeSession(body) {
         length: this.attributes.audioData.length
     }).map(Number.call, Number).reverse();
     this.attributes.index = this.attributes.playOrder.indexOf(0);
+}
+
+function formatDate(milliseconds) {
+    var d = new Date(milliseconds);
+    // return d.toLocaleDateString()
+    let mlist = [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ];
+    return mlist[d.getMonth()] + " " + d.getDate() + ", " + d.getFullYear();
 }
 
 const stateHandlers = {
@@ -71,12 +78,13 @@ const stateHandlers = {
         },
         'AMAZON.HelpIntent' : function () {
             var podcast = this.attributes.audioData[this.attributes.playOrder[this.attributes.index]];
+            var episodeDate = formatDate(podcast.created);
 
-            var message = 'You\'re listening to Five Minutes in Church History for ' + podcast.date + ' titled ' + podcast.title + '. You can say Pause, or, Resume, to control playback. To listen to an earlier episode, say Previous. To return to the most recent episode, say Latest Episode. To learn more about Five Minutes in Church History, say About. What can I help you with?';
+            var message = 'You\'re listening to Five Minutes in Church History for ' + episodeDate + ' titled ' + podcast.title + '. You can say Pause, or, Resume, to control playback. To listen to an earlier episode, say Previous. To return to the most recent episode, say Latest Episode. To learn more about Five Minutes in Church History, say About. What can I help you with?';
             var reprompt = 'What can I help you with?';
 
             var cardTitle = 'Help with Five Minutes in Church History';
-            var cardContent = 'You\'re listening to Five Minutes in Church History for ' + podcast.date + ' titled \"' + podcast.title + '\".\nSay "Pause" or "Resume" to control playback.\nSay \"Alexa, ask Church History to play the latest episode\" to play the most recent episode.\nSay "Previous" to listen to an earlier episode.';
+            var cardContent = 'You\'re listening to Five Minutes in Church History for ' + episodeDate + ' titled \"' + podcast.title + '\".\nSay "Pause" or "Resume" to control playback.\nSay \"Alexa, ask Church History to play the latest episode\" to play the most recent episode.\nSay "Previous" to listen to an earlier episode.';
             this.response.cardRenderer(cardTitle, cardContent, null);
 
             this.response.speak(message).listen(reprompt);
@@ -185,9 +193,11 @@ const stateHandlers = {
             } else {
                 this.handler.state = constants.states.RESUME_MODE;
                 var podcast = this.attributes.audioData[this.attributes.playOrder[this.attributes.index]];
-                message = 'Welcome back to Five Minutes in Church History. Previously you were listening to the episode from ' + podcast.date +
+                var episodeDate = formatDate(podcast.created);
+
+                message = 'Welcome back to Five Minutes in Church History. Previously you were listening to the episode from ' + episodeDate +
                     ' titled ' + podcast.title + '. Would you like to resume that episode?';
-                reprompt = 'Say yes to resume the episode from ' + podcast.date + ' titled ' + podcast.title + ', or say no to play the latest episode.';
+                reprompt = 'Say yes to resume the episode from ' + episodeDate + ' titled ' + podcast.title + ', or say no to play the latest episode.';
 
                 this.response.speak(message).listen(reprompt);
                 this.emit(':responseReady');
@@ -228,12 +238,13 @@ const stateHandlers = {
         },
         'AMAZON.HelpIntent' : function () {
             var podcast = this.attributes.audioData[this.attributes.playOrder[this.attributes.index]];
+            var episodeDate = formatDate(podcast.created);
 
-            var message = 'You\'re listening to Five Minutes in Church History for ' + podcast.date + ' titled ' + podcast.title + '. You can say Pause, or, Resume, to control playback. To listen to an earlier episode, say Previous. To return to the most recent episode, say Latest Episode. To learn more about Five Minutes in Church History, say About. What can I help you with?';
+            var message = 'You\'re listening to Five Minutes in Church History for ' + episodeDate + ' titled ' + podcast.title + '. You can say Pause, or, Resume, to control playback. To listen to an earlier episode, say Previous. To return to the most recent episode, say Latest Episode. To learn more about Five Minutes in Church History, say About. What can I help you with?';
             var reprompt = 'What can I help you with?';
 
             var cardTitle = 'Help with Five Minutes in Church History';
-            var cardContent = 'You\'re listening to Five Minutes in Church History for ' + podcast.date + ' titled \"' + podcast.title + '\".\nSay "Pause" or "Resume" to control playback.\nSay \"Alexa, ask Church History to play the latest episode\" to play the most recent episode.\nSay "Previous" to listen to an earlier episode.';
+            var cardContent = 'You\'re listening to Five Minutes in Church History for ' + episodeDate + ' titled \"' + podcast.title + '\".\nSay "Pause" or "Resume" to control playback.\nSay \"Alexa, ask Church History to play the latest episode\" to play the most recent episode.\nSay "Previous" to listen to an earlier episode.';
             this.response.cardRenderer(cardTitle, cardContent, null);
 
 
@@ -301,10 +312,11 @@ const stateHandlers = {
          */
         'LaunchRequest' : function () {
             var podcast = this.attributes.audioData[this.attributes.playOrder[this.attributes.index]];
+            var episodeDate = formatDate(podcast.created);
 
-            let message = 'Welcome back to Five Minutes in Church History. Previously you were listening to the episode from ' + podcast.date +
+            let message = 'Welcome back to Five Minutes in Church History. Previously you were listening to the episode from ' + episodeDate +
                 ' titled ' + podcast.title + '. Would you like to resume that episode?';
-            let reprompt = 'Say yes to resume the episode from ' + podcast.date + ' titled ' + podcast.title + ', or say no to play the latest episode.';
+            let reprompt = 'Say yes to resume the episode from ' + episodeDate + ' titled ' + podcast.title + ', or say no to play the latest episode.';
 
             this.response.speak(message).listen(reprompt);
             this.emit(':responseReady');
@@ -331,9 +343,10 @@ const stateHandlers = {
         },
         'AMAZON.HelpIntent' : function () {
             var podcast = this.attributes.audioData[this.attributes.playOrder[this.attributes.index]];
+            var episodeDate = formatDate(podcast.created);
 
-            let message = 'Previously you were listening to the episode from ' + podcast.date + ' titled ' + podcast.title + '. Would you like to resume that episode?';
-            let reprompt = 'Say yes to resume the episode from ' + podcast.date + ' titled ' + podcast.title + ', or say no to play the latest episode.';
+            let message = 'Previously you were listening to the episode from ' + episodeDate + ' titled ' + podcast.title + '. Would you like to resume that episode?';
+            let reprompt = 'Say yes to resume the episode from ' + episodeDate + ' titled ' + podcast.title + ', or say no to play the latest episode.';
 
             this.response.speak(message).listen(reprompt);
             this.emit(':responseReady');
@@ -415,13 +428,14 @@ var controller = function () {
                     var token = String(this.attributes.playOrder[this.attributes.index]);
                     var playBehavior = 'REPLACE_ALL';
                     var podcast = this.attributes.audioData[this.attributes.playOrder[this.attributes.index]];
+                    var episodeDate = formatDate(podcast.created);
                     var offsetInMilliseconds = this.attributes.offsetInMilliseconds;
                     // Since play behavior is REPLACE_ALL, enqueuedToken attribute need to be set to null.
                     this.attributes.enqueuedToken = null;
 
                     if (utils.canThrowCard.call(this)) {
-                        var cardTitle = podcast.title + ' (' + podcast.date + ')';
-                        var cardContent = podcast.description;
+                        var cardTitle = podcast.title + ' (' + episodeDate + ')';
+                        var cardContent = podcast.itunes_subtitle;
                         var cardImage = {
                             'smallImageUrl': 'https://s3.amazonaws.com/ligonier-echo-apps/700x700_5MiCH.jpg',
                             'largeImageUrl': 'https://s3.amazonaws.com/ligonier-echo-apps/1200x1200_5MiCH.jpg'
@@ -436,12 +450,13 @@ var controller = function () {
                 var token = String(this.attributes.playOrder[this.attributes.index]);
                 var playBehavior = 'REPLACE_ALL';
                 var podcast = this.attributes.audioData[this.attributes.playOrder[this.attributes.index]];
+                var episodeDate = formatDate(podcast.created);
                 var offsetInMilliseconds = this.attributes.offsetInMilliseconds;
                 // Since play behavior is REPLACE_ALL, enqueuedToken attribute need to be set to null.
                 this.attributes.enqueuedToken = null;
 
-                var cardTitle = podcast.title + ' (' + podcast.date + ')';
-                var cardContent = podcast.description;
+                var cardTitle = podcast.title + ' (' + episodeDate + ')';
+                var cardContent = podcast.itunes_subtitle;
                 var cardImage = {
                     'smallImageUrl': 'https://s3.amazonaws.com/ligonier-echo-apps/700x700_5MiCH.jpg',
                     'largeImageUrl': 'https://s3.amazonaws.com/ligonier-echo-apps/1200x1200_5MiCH.jpg'
@@ -475,11 +490,12 @@ var controller = function () {
                     var token = String(this.attributes.playOrder[this.attributes.index]);
                     var playBehavior = 'REPLACE_ALL';
                     var podcast = this.attributes.audioData[this.attributes.playOrder[this.attributes.index]];
+                    var episodeDate = formatDate(podcast.created);
                     var offsetInMilliseconds = this.attributes.offsetInMilliseconds;
 
                     if (utils.canThrowCard.call(this)) {
-                        var cardTitle = podcast.title + ' (' + podcast.date + ')';
-                        var cardContent = podcast.description;
+                        var cardTitle = podcast.title + ' (' + episodeDate + ')';
+                        var cardContent = podcast.itunes_subtitle;
                         var cardImage = {
                             'smallImageUrl': 'https://s3.amazonaws.com/ligonier-echo-apps/700x700_5MiCH.jpg',
                             'largeImageUrl': 'https://s3.amazonaws.com/ligonier-echo-apps/1200x1200_5MiCH.jpg'
@@ -517,8 +533,9 @@ var controller = function () {
                     this.handler.state = constants.states.START_MODE;
 
                     if (utils.canThrowCard.call(this)) {
-                        var cardTitle = podcast.title + ' (' + podcast.date + ')';
-                        var cardContent = podcast.description;
+                        var episodeDate = formatDate(podcast.created);
+                        var cardTitle = podcast.title + ' (' + episodeDate + ')';
+                        var cardContent = podcast.itunes_subtitle;
                         var cardImage = {
                             'smallImageUrl': 'https://s3.amazonaws.com/ligonier-echo-apps/700x700_5MiCH.jpg',
                             'largeImageUrl': 'https://s3.amazonaws.com/ligonier-echo-apps/1200x1200_5MiCH.jpg'
@@ -557,8 +574,9 @@ var controller = function () {
                     var offsetInMilliseconds = this.attributes.offsetInMilliseconds;
 
                     if (utils.canThrowCard.call(this)) {
-                        var cardTitle = podcast.title + ' (' + podcast.date + ')';
-                        var cardContent = podcast.description;
+                        var episodeDate = formatDate(podcast.created);
+                        var cardTitle = podcast.title + ' (' + episodeDate + ')';
+                        var cardContent = podcast.itunes_subtitle;
                         var cardImage = {
                             'smallImageUrl': 'https://s3.amazonaws.com/ligonier-echo-apps/700x700_5MiCH.jpg',
                             'largeImageUrl': 'https://s3.amazonaws.com/ligonier-echo-apps/1200x1200_5MiCH.jpg'
