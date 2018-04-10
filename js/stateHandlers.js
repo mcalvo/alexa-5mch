@@ -443,7 +443,7 @@ var controller = function () {
                         this.response.cardRenderer(cardTitle, cardContent, cardImage);
                     }
 
-                    this.response.audioPlayerPlay(playBehavior, podcast.url.replace("http", "https"), token, null, offsetInMilliseconds);
+                    this.response.audioPlayerPlay(playBehavior, podcast.enclosures[0].url, token, null, offsetInMilliseconds);
                     this.emit(':responseReady');
                 }.bind(this));
             } else {
@@ -463,7 +463,7 @@ var controller = function () {
                 };
                 this.response.cardRenderer(cardTitle, cardContent, cardImage);
 
-                this.response.audioPlayerPlay(playBehavior, podcast.url, token, null, offsetInMilliseconds);
+                this.response.audioPlayerPlay(playBehavior, podcast.enclosures[0].url, token, null, offsetInMilliseconds);
                 this.emit(':responseReady');
             }
         },
@@ -504,7 +504,7 @@ var controller = function () {
                     }
 
                     var message = 'You\'re listening to the most recent episode. Say, Previous, to listen to earlier episodes.';
-                    this.response.speak(message).audioPlayerPlay(playBehavior, podcast.url, token, null, offsetInMilliseconds);
+                    this.response.speak(message).audioPlayerPlay(playBehavior, podcast.enclosures[0].url, token, null, offsetInMilliseconds);
                     this.emit(':responseReady');
                 }
             } else {
@@ -585,7 +585,7 @@ var controller = function () {
                     }
 
                     var message = 'You have reached the last available episode. Visit Five Minutes in Church History dot com to access older episodes';
-                    this.response.speak(message).audioPlayerPlay(playBehavior, podcast.url, token, null, offsetInMilliseconds);
+                    this.response.speak(message).audioPlayerPlay(playBehavior, podcast.enclosures[0].url, token, null, offsetInMilliseconds);
                     this.emit(':responseReady');
                 }
             } else {
